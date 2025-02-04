@@ -6,7 +6,7 @@ all: $(SUBDIRS)
 $(SUBDIRS):
 	@echo "Processing $@"
 	mkdir -p $@/build && cd $@/build && \
-	cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. && \
+	cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++.. && \
 	$(MAKE) && \
 	sudo $(MAKE) install
 .PHONY: all $(SUBDIRS)
