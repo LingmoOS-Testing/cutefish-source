@@ -1,22 +1,21 @@
 # Define the list of subdirectories containing the projects
 SUBDIRS := appmotor bluez-qt core cursor-themes dock filemanager fishui icons kwin-plugins launcher libcutefish qt-plugins screenlocker sddm-theme gtk-theme settings statusbar terminal wallpapers
-
 # Default target
 all: $(SUBDIRS)
-
-# Rule to build each subdirectory
+# Rule to configure, build and install each subdirectory
 $(SUBDIRS):
-	$(MAKE) -C $@
-
+	@echo "Processing $@"
+	mkdir -p $@/build && cd $@/build && \
+	cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. && \
+	$(MAKE) && \
+	sudo $(MAKE) install
 .PHONY: all $(SUBDIRS)
 install: $(SUBDIRS)
+	@echo "Installation completed for all components."
+# Clean rule for cleaning up build artifacts in each subdirectory
+clean:
 	@for dir in $(SUBDIRS); do \
-		mkdir -p $$dir/build; \
-		cd $$dir/build; \
-		cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ..; \
-		$(MAKE); \
-		sudo $(MAKE) install; \
-		cd ../..; \
+		echo "Cleaning $$dir"; \
+		rm -rf $$dir/build; \
 	done
-
-.PHONY: install
+.PHONY: clean
